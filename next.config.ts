@@ -1,9 +1,11 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
+  // Links are checked against the app's routes: a mistyped href fails the type check, not a visitor.
+  typedRoutes: true,
   partialPrefetching: true,
+
   turbopack: {
     rules: {
       "*.css": {
@@ -12,6 +14,6 @@ const nextConfig: NextConfig = {
       },
     },
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

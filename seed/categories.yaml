@@ -1,0 +1,22 @@
+# The job categories, in the order the site lists them.
+- name: Engineering
+  slug: engineering
+  description: Building and running the software, from the database to the browser.
+- name: Design
+  slug: design
+  description: Product, interface and brand design, and the research behind it.
+- name: Product
+  slug: product
+  description: Deciding what gets built next, and why.
+- name: Data
+  slug: data
+  description: Analytics, data engineering and machine learning.
+- name: Infrastructure
+  slug: infrastructure
+  description: Platforms, reliability and security.
+- name: Support
+  slug: support
+  description: Helping customers, in writing and in calls.
+- name: Marketing
+  slug: marketing
+  description: Writing, growth and developer relations.

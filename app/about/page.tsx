@@ -1,0 +1,72 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Elsewhere is a demo job board, built with Next.js on Nohead to show a real site's content kept in a CMS.",
+}
+
+/** The address of this site's code, for the links below. */
+const repository = "https://github.com/nohead-io/starter-jobs-nextjs"
+
+/**
+ * What the board is, who it's for and how it's made. The page is written in
+ * code, like any other: a board of your own tells its own story here.
+ */
+export default function AboutPage() {
+  return (
+    <article className="max-w-2xl">
+      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">About Elsewhere</h1>
+      <p className="text-muted-foreground mt-4 text-lg text-pretty">
+        Elsewhere is a job board for remote and hybrid work at small software companies. It&apos;s also a
+        demo: its companies and jobs are invented, and it&apos;s here to show how a site like it is made.
+      </p>
+
+      <div className="prose prose-neutral dark:prose-invert prose-headings:tracking-tight prose-h2:text-xl prose-a:text-primary prose-a:underline-offset-4 mt-10 max-w-none">
+        <h2>A board that isn&apos;t real</h2>
+        <p>
+          Every company on Elsewhere, its logo and its jobs were written for this demo. None of them is
+          hiring. Everything works as it would on a real board, though: you can search and filter the jobs and
+          follow new ones by <a href="/feed.xml">RSS</a>.
+        </p>
+
+        <h2>Why it&apos;s here</h2>
+        <p>
+          Elsewhere is a starter for <a href="https://nohead.io">Nohead</a>, an API-first headless CMS: its
+          content is modelled once, edited in Nohead&apos;s editor and served through an API. It shows what a
+          site built on Nohead looks like when it has to do more than show pages: content edited in Nohead and
+          read by the site, search, images, forms that write back, and a site that refreshes when something is
+          published.
+        </p>
+
+        <h2>How it&apos;s made</h2>
+        <ul>
+          <li>
+            <strong>Content</strong> lives in the repository, as files: the jobs in Markdown, the companies
+            hiring and the categories in YAML.
+          </li>
+          <li>
+            <strong>Search and filters</strong> run in the browser, over the jobs the page was built with.
+          </li>
+          <li>
+            <strong>Pages</strong> are built ahead of time and refreshed every hour.
+          </li>
+          <li>
+            <strong>The site</strong> is <a href="https://nextjs.org">Next.js</a>, with{" "}
+            <a href="https://ui.shadcn.com">shadcn/ui</a> for its interface,{" "}
+            <a href="https://lucide.dev">Lucide</a> for icons and{" "}
+            <a href="https://fonts.google.com/specimen/Schibsted+Grotesk">Schibsted Grotesk</a> for its type.
+          </li>
+        </ul>
+
+        <h2>Make one of your own</h2>
+        <p>
+          The code is <a href={repository}>on GitHub</a>, under the MIT licence. Its history builds the site
+          one step at a time, from a plain Next.js site reading files to everything above, so you can follow
+          how each part is made. Its README says how to connect a copy to your own Nohead project, fill it
+          with your own jobs and deploy it.
+        </p>
+      </div>
+    </article>
+  )
+}

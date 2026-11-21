@@ -1,0 +1,61 @@
+# The companies hiring, all invented. Logos are in images/companies.
+- name: Fernhill
+  slug: fernhill
+  logo:
+    image: images/companies/fernhill.svg
+  website: https://fernhill.example
+  about: Accounting for freelancers and two-person studios. Invoices, expenses and the tax return, in one place that takes ten minutes a month.
+- name: Tidewater
+  slug: tidewater
+  logo:
+    image: images/companies/tidewater.svg
+  website: https://tidewater.example
+  about: An API for ocean and coastal weather. Harbours, ferry operators and sailing apps ask it what the water will do in the next six hours.
+- name: Quillmark
+  slug: quillmark
+  logo:
+    image: images/companies/quillmark.svg
+  website: https://quillmark.example
+  about: A writing tool for teams who publish long documents together, such as handbooks, grant applications and books.
+- name: Northlight
+  slug: northlight
+  logo:
+    image: images/companies/northlight.svg
+  website: https://northlight.example
+  about: Booking and video calls for small clinics, from physiotherapists to speech therapists. Used in nine countries.
+- name: Parcelwise
+  slug: parcelwise
+  logo:
+    image: images/companies/parcelwise.svg
+  website: https://parcelwise.example
+  about: Shipping for small online shops. Labels, tracking and returns, with every carrier's price on one screen.
+- name: Kestrel
+  slug: kestrel
+  logo:
+    image: images/companies/kestrel.svg
+  website: https://kestrel.example
+  about: Uptime monitoring and status pages. Checks from twelve regions every thirty seconds, and a page your customers read when things break.
+- name: Loam
+  slug: loam
+  logo:
+    image: images/companies/loam.svg
+  website: https://loam.example
+  about: Farm records for vegetable growers. Plantings, harvests and the paperwork organic certification asks for, on a phone in a muddy field.
+- name: Brightloop
+  slug: brightloop
+  logo:
+    image: images/companies/brightloop.svg
+  website: https://brightloop.example
+  about: Online courses for teachers, made by teachers. Short lessons, assignments and certificates schools recognise.
+- name: Ledgerline
+  slug: ledgerline
+  logo:
+    image: images/companies/ledgerline.svg
+  website: https://ledgerline.example
+  about: Payroll for teams of two to two hundred, across Europe. Payslips, pensions and the forms each country wants.
+- name: Small Hours
+  slug: small-hours
+  logo:
+    image: images/companies/small-hours.svg
+  website: https://smallhours.example
+  about: A game studio of fourteen, making quiet games for the evening. Its latest, about keeping a lighthouse, sold half a million copies.
