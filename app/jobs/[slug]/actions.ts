@@ -1,8 +1,9 @@
 "use server"
 
-import { Nohead, ValidationError } from "@nohead/sdk"
-import { verdictOf } from "@/lib/bot-checks"
+import { ValidationError } from "@nohead/sdk"
+import { REFUSAL, verdictOf } from "@/lib/bot-checks"
 import { getJob } from "@/lib/content"
+import { formKeyClient } from "@/lib/form-key"
 
 /** The fields a visitor fills in. The server action picks these, and nothing else, from the form. */
 export type Field = "name" | "email" | "message" | "link"
@@ -20,8 +21,8 @@ export interface ApplyState {
 /**
  * Sends an application for the job: creates an unpublished record in the
  * applications collection, which the site's own key can't read. The key that
- * creates it (NOHEAD_FORM_KEY, with only the records:write scope) stays on
- * the server.
+ * creates it (NOHEAD_FORM_KEY, with only the records:write and assets:write
+ * scopes: the form that posts a job uploads logos with it) stays on the server.
  */
 export async function apply(slug: string, _previous: ApplyState, form: FormData): Promise<ApplyState> {
   const text = (name: string) => String(form.get(name) ?? "").trim()
@@ -29,27 +30,16 @@ export async function apply(slug: string, _previous: ApplyState, form: FormData)
 
   const verdict = await verdictOf(form)
   if (verdict === "bot") return { sent: true }
-  if (verdict === "refused")
-    return {
-      sent: false,
-      values,
-      error: "This browser couldn't be checked. Reload the page and send it again.",
-    }
+  if (verdict === "refused") return { sent: false, values, error: REFUSAL }
 
   const job = await getJob(slug)
   if (!job) return { sent: false, values, error: "This job has closed." }
 
-  // Without it, the SDK would fall back to NOHEAD_API_KEY, which can't write.
-  if (!process.env.NOHEAD_FORM_KEY) {
-    console.error(
-      "NOHEAD_FORM_KEY isn't set: create a key with only the records:write scope for the application form."
-    )
-    return { sent: false, values, error: "Applications can't be sent at the moment." }
-  }
+  const nohead = formKeyClient()
+  if (!nohead) return { sent: false, values, error: "Applications can't be sent at the moment." }
 
   try {
-    const forms = new Nohead({ apiKey: process.env.NOHEAD_FORM_KEY })
-    await forms.records.create("applications", {
+    await nohead.records.create("applications", {
       data: { job: job.id, ...values, link: values.link || undefined },
     })
   } catch (error) {

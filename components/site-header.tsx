@@ -10,6 +10,7 @@ import { Suspense, useEffect, useRef, useState } from "react"
 const links: { href: Route; label: string }[] = [
   { href: "/about", label: "About" },
   { href: "/companies", label: "Companies" },
+  { href: "/post", label: "Post a job" },
 ]
 
 /**

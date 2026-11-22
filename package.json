@@ -16,6 +16,7 @@
     "@base-ui/react": "^1.9.0",
     "@meilisearch/instant-meilisearch": "^0.31.5",
     "@nohead/sdk": "0.24.0",
+    "@sindresorhus/slugify": "^4.0.1",
     "botid": "^1.5.13",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.2",

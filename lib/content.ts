@@ -233,3 +233,26 @@ export async function getSearch(): Promise<Search> {
     filter: `data.closes_on >= ${today} AND expanded.company.data.name EXISTS AND expanded.category.data.name EXISTS`,
   }
 }
+
+/** What the form that posts a job offers for the jobs' choice fields: the options the content model allows. */
+export interface JobChoices {
+  types: string[]
+  workplaces: string[]
+  currencies: string[]
+}
+
+/**
+ * The jobs' choice fields' options, read from the content model (with the
+ * site's key, which has the schema:read scope), so an option added in Nohead
+ * shows in the form without changing the site.
+ */
+export async function getJobChoices(): Promise<JobChoices> {
+  "use cache"
+  cacheAsContent()
+  const { fields } = await nohead.collections.get("jobs")
+  const options = (key: string) => {
+    const field = fields.find((field) => field.key === key)
+    return field?.type === "enum" ? field.configuration.options : []
+  }
+  return { types: options("type"), workplaces: options("workplace"), currencies: options("salary_currency") }
+}

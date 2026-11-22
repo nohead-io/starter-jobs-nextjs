@@ -1,10 +1,13 @@
 import { checkBotId } from "botid/server"
 
-// The application form is open to anyone, so bots are kept out twice: a
-// field people never see (bots fill in every field they find, and
-// components/bot-checks.tsx puts it in the form), and, on Vercel, Vercel
+// The site's forms are open to anyone, so bots are kept out twice: a field
+// people never see (bots fill in every field they find, and
+// components/bot-checks.tsx puts it in each form), and, on Vercel, Vercel
 // BotID, which checks the visitor's browser without asking them anything
-// (instrumentation-client.ts names the form it watches).
+// (instrumentation-client.ts names the forms it watches).
+
+/** What a form says when BotID refuses it. */
+export const REFUSAL = "This browser couldn't be checked. Reload the page and send it again."
 
 /**
  * Whether a form looks like a person sent it. A bot that fills in the hidden

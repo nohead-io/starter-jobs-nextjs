@@ -175,6 +175,9 @@ importers:
       '@nohead/sdk':
         specifier: 0.24.0
         version: 0.24.0
+      '@sindresorhus/slugify':
+        specifier: ^4.0.1
+        version: 4.0.1
       botid:
         specifier: ^1.5.13
         version: 1.5.13(next@16.4.6(@babel/core@7.29.13(supports-color@7.2.0))(@types/node@26.6.6)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react@19.3.0)
@@ -865,8 +868,8 @@ packages:
     resolution: {integrity: sha512-DsuqdYRMBj9zcLBQ6m0KrkrWi8PuxXcPlO7CEjrhCOZWt8JPEMCuD3LD3FOgET/sHqgOE++xvkZI0HONqFyaug==}
     engines: {node: '>=22'}
 
-  '@sindresorhus/transliterate@3.1.0':
-    resolution: {integrity: sha512-xSMZIoi9tqXNXNdcJWdvVSiNmFiHnE8PjlV9Yb0I33zX2UrbNooiVpOdAvEjdrYYLLUEnvvqCnm+wTyU12wDng==}
+  '@sindresorhus/transliterate@3.0.0':
+    resolution: {integrity: sha512-mqOUtMxpY419WtwwYw1EX865Oh+QWpa37yhGLXNmVc6d91wsBYLG51TgSePqrdnCSnTJn2AygX+35StK86tNOA==}
     engines: {node: '>=22'}
 
   '@swc/helpers@0.5.18':
@@ -3801,10 +3804,10 @@ snapshots:
 
   '@sindresorhus/slugify@4.0.1':
     dependencies:
-      '@sindresorhus/transliterate': 3.1.0
+      '@sindresorhus/transliterate': 3.0.0
       escape-string-regexp: 5.0.0
 
-  '@sindresorhus/transliterate@3.1.0': {}
+  '@sindresorhus/transliterate@3.0.0': {}
 
   '@swc/helpers@0.5.18':
     dependencies:

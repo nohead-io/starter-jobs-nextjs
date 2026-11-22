@@ -14,6 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: url("/") },
     { url: url("/companies") },
     { url: url("/about") },
+    { url: url("/post") },
     ...jobs.map((job) => ({ url: url(`/jobs/${job.slug}`), lastModified: job.postedOn })),
     ...companies.map((company) => ({ url: url(`/companies/${company.slug}`) })),
     ...categories.map((category) => ({ url: url(`/categories/${category.slug}`) })),

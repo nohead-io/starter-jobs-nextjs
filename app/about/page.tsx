@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "About",
@@ -27,8 +28,9 @@ export default function AboutPage() {
         <p>
           Every company on Elsewhere, its logo and its jobs were written for this demo. None of them is
           hiring. Everything works as it would on a real board, though: you can search and filter the jobs,
-          follow new jobs by <a href="/feed.xml">RSS</a> and apply to a job. What you send is kept as it would
-          be, unpublished, and deleted regularly; nobody reads it.
+          follow new jobs by <a href="/feed.xml">RSS</a>, apply to a job and{" "}
+          <Link href="/post">post one</Link>. What you send is kept as it would be, unpublished, and deleted
+          regularly; nobody reads it, and nothing you post goes live.
         </p>
 
         <h2>Why it&apos;s here</h2>
@@ -56,9 +58,9 @@ export default function AboutPage() {
             <a href="https://docs.nohead.io/guides/images">image URLs</a>.
           </li>
           <li>
-            <strong>Applications</strong> are{" "}
+            <strong>Applications and posted jobs</strong> are{" "}
             <a href="https://docs.nohead.io/guides/writing-content">written to Nohead</a> by the site&apos;s
-            server, unpublished, for someone to read.
+            server, unpublished, for someone to review.
           </li>
           <li>
             <strong>Pages</strong> are built ahead of time and{" "}

@@ -100,6 +100,7 @@ collections:
       description:
         type: rich_text
         required: true
+        max_length: 10000
         search:
           returned: false
   companies:
@@ -175,3 +176,25 @@ collections:
         type: text
         format: url
         description: A portfolio, a profile or a CV online, if they gave one.
+  postings:
+    description: Jobs posted from the site, with who posted them. They stay unpublished; the job goes live once someone reviews and publishes it, and its company if it's new.
+    fields:
+      job:
+        type: relation
+        required: true
+        collection: jobs
+        search:
+          filterable: true
+      name:
+        type: text
+        required: true
+        max_length: 120
+      email:
+        type: text
+        required: true
+        format: email
+        description: Where to reach them about the job.
+      note:
+        type: long_text
+        max_length: 2000
+        description: Anything they'd like the reviewer to know.

@@ -4,9 +4,10 @@ import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
 import { TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 /**
- * The site's tabs, as a job's page has them: a row of tabs on a line, with
- * an underline that slides to the open tab, and panels that slide in from
- * the side their tab is on.
+ * The site's tabs, shared by a job's page and the form that posts a job: a
+ * row of tabs on a line with an underline, or a row of pills in a track,
+ * either way with a marker that slides to the open tab, and panels that
+ * slide in from the side their tab is on.
  */
 
 /** For the tabs' root: clipped sideways, so content sliding in doesn't scroll the page; a little room on each side keeps focus rings whole. */
@@ -51,6 +52,38 @@ export function LineTabsList({ tabs }: { tabs: [string, React.ReactNode][] }) {
         renderBeforeHydration
         className="bg-foreground absolute -bottom-px left-(--active-tab-left) h-0.5 w-(--active-tab-width) transition-[left,width] duration-300 ease-out motion-reduce:transition-none"
       />
+    </TabsList>
+  )
+}
+
+/** The row of tabs as pills in a track, as [value, label]: a pill slides to the open one. */
+export function PillTabsList({ tabs, label }: { tabs: [string, React.ReactNode][]; label: string }) {
+  return (
+    <TabsList
+      aria-label={label}
+      // Full width on phones, the tabs sharing it; as wide as they need from tablets up.
+      className="relative h-auto w-full p-1 group-data-horizontal/tabs:h-auto sm:w-fit"
+    >
+      {/*
+        The pill comes before the tabs, so the tabs paint over it in their
+        order, with no z-index: one would also lift them over the pane
+        sliding in below, and Safari would move them onto a layer of their
+        own for the slide, where their text drops a pixel until it ends.
+      */}
+      <TabsPrimitive.Indicator
+        renderBeforeHydration
+        className="bg-background dark:bg-input/30 dark:border-input absolute top-(--active-tab-top) left-(--active-tab-left) h-(--active-tab-height) w-(--active-tab-width) rounded-md shadow-sm transition-[left,width] duration-300 ease-out motion-reduce:transition-none dark:border"
+      />
+      {tabs.map(([value, label]) => (
+        <TabsTrigger
+          key={value}
+          value={value}
+          // The open tab is drawn by the pill alone: without its own background and shadow (shadcn's, set for the default variant), which would fade in place while the pill slides.
+          className="text-muted-foreground h-auto flex-1 px-4 py-1.5 data-active:bg-transparent group-data-[variant=default]/tabs-list:data-active:shadow-none sm:flex-none dark:data-active:border-transparent dark:data-active:bg-transparent"
+        >
+          {label}
+        </TabsTrigger>
+      ))}
     </TabsList>
   )
 }
