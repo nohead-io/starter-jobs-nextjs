@@ -1,0 +1,151 @@
+# Nohead schema: nohead schema diff | push. Collections are keyed by slug,
+# fields by API key (renaming a key is a new field). Field order is kept.
+collections:
+  jobs:
+    description: The job ads. A job shows on the site until its closing date.
+    public_search: true
+    fields:
+      title:
+        type: text
+        required: true
+        max_length: 120
+      slug:
+        type: text
+        required: true
+        format: slug
+        description: The address of the job's page, /jobs/<slug>.
+      company:
+        type: relation
+        required: true
+        collection: companies
+        search:
+          searchable:
+            - name
+          filterable: true
+          returned:
+            - name
+            - logo
+      category:
+        type: relation
+        required: true
+        collection: categories
+        search:
+          filterable: true
+          returned:
+            - name
+            - slug
+      type:
+        type: enum
+        required: true
+        options:
+          - Full-time
+          - Part-time
+          - Contract
+        search:
+          filterable: true
+      workplace:
+        type: enum
+        required: true
+        options:
+          - Remote
+          - Hybrid
+          - On-site
+        search:
+          filterable: true
+      location:
+        type: text
+        required: true
+        max_length: 60
+        description: Where people can work from, such as Europe or Worldwide, or the office's city.
+        search:
+          filterable: true
+      salary_min:
+        type: integer
+        required: true
+        description: The yearly salary, before tax, at the bottom of the range.
+        search:
+          filterable: true
+          sortable: true
+      salary_max:
+        type: integer
+        required: true
+        search:
+          filterable: true
+          sortable: true
+      salary_currency:
+        type: enum
+        required: true
+        options:
+          - EUR
+          - USD
+          - GBP
+          - DKK
+      posted_on:
+        type: date
+        required: true
+        search:
+          sortable: true
+      closes_on:
+        type: date
+        required: true
+        description: The last day to apply. The job leaves the site the day after.
+        search:
+          filterable: true
+          sortable: true
+      summary:
+        type: long_text
+        required: true
+        max_length: 200
+        description: One sentence, shown in lists and link previews.
+      description:
+        type: rich_text
+        required: true
+        search:
+          returned: false
+  companies:
+    description: The companies hiring.
+    fields:
+      name:
+        type: text
+        required: true
+        max_length: 80
+      slug:
+        type: text
+        required: true
+        format: slug
+        description: The address of its page, /companies/<slug>.
+      logo:
+        type: asset
+        required: true
+        description: Square, at least 128 pixels wide; SVG works best.
+        accepted_types:
+          - image/*
+      website:
+        type: text
+        required: true
+        format: url
+      about:
+        type: long_text
+        required: true
+        max_length: 300
+  categories:
+    description: The kinds of job, in the order the site lists them.
+    fields:
+      name:
+        type: text
+        required: true
+        max_length: 40
+      slug:
+        type: text
+        required: true
+        format: slug
+        description: The address of its page, /categories/<slug>.
+      description:
+        type: long_text
+        required: true
+        max_length: 200
+      order:
+        type: integer
+        required: true
+        search:
+          sortable: true

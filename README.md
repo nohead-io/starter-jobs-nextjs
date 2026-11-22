@@ -19,6 +19,18 @@ The demo is Elsewhere, a board for remote jobs at small software companies. The 
 
 At this step the site reads its content from [`seed/`](seed) (Markdown, YAML and the logos), through one module, [`lib/content.ts`](lib/content.ts), that every page calls.
 
+## The content model
+
+[`nohead.schema.yaml`](nohead.schema.yaml) is the Nohead project's content model as code: the jobs, the companies hiring and the categories the site shows. The [Nohead CLI](https://github.com/nohead-io/nohead-cli) pushes it to a project:
+
+```bash
+pnpm nohead login
+pnpm nohead schema diff   # what would change
+pnpm nohead schema push   # change it
+```
+
+`pnpm nohead schema pull` writes the project's model back to the file, after a change made in the web app.
+
 ## Step by step
 
 This repository's history builds the site one step at a time. It starts with a plain Next.js site reading its content from [`seed/`](seed), and each commit after it moves one thing onto Nohead:
