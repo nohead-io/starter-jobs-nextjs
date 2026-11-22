@@ -2,15 +2,16 @@
 // the categories. Every page reads through these functions, so where the
 // content comes from can change here alone.
 //
-// Each function is cached ('use cache') for an hour: pages are served from
-// the cache, and a job past its closing date drops out within the hour,
-// without anyone touching it.
+// Each function is cached ('use cache') until content is published, which
+// the webhook in app/webhooks/nohead says, or until the day changes, when a
+// job past its closing date drops out without anyone touching it:
+// cacheAsContent(), below. Pages are served from the cache.
 //
 // Server-side only: importing it from a client component fails the build, so
 // the site's key never reaches the browser.
 import "server-only"
 import { Nohead } from "@nohead/sdk"
-import { cacheLife } from "next/cache"
+import { cacheLife, cacheTag } from "next/cache"
 import { newestFirst } from "./format"
 
 export interface Company {
@@ -80,6 +81,20 @@ export function boardJobOf(job: Job): BoardJob {
   }
 }
 
+/**
+ * Caches a 'use cache' function's result as the site's content: under the tag
+ * "nohead", which the webhook clears when content is published, and until
+ * midnight (UTC), when jobs past their closing date leave the board, as
+ * nothing is published then. The first visit after midnight gets the day
+ * before's page while a new one is built.
+ */
+export function cacheAsContent() {
+  const day = 86_400
+  const untilMidnight = day - (Math.floor(Date.now() / 1000) % day)
+  cacheLife({ revalidate: untilMidnight, expire: untilMidnight + day })
+  cacheTag("nohead")
+}
+
 // The SDK reads NOHEAD_API_KEY: a key with "Published records only" on and
 // the records:read, assets:read and schema:read scopes.
 // A list is read page by page as it's iterated, 100 records a request, and
@@ -89,7 +104,7 @@ const nohead = new Nohead()
 /** The categories, in the order the site lists them. */
 export async function getCategories(): Promise<Category[]> {
   "use cache"
-  cacheLife("hours")
+  cacheAsContent()
   const records = await Array.fromAsync(
     nohead.records.list<Omit<Category, "id">>("categories", { limit: 100, sort: "order" })
   )
@@ -99,7 +114,7 @@ export async function getCategories(): Promise<Category[]> {
 /** The companies, by name. */
 export async function getCompanies(): Promise<Company[]> {
   "use cache"
-  cacheLife("hours")
+  cacheAsContent()
   const records = await Array.fromAsync(
     nohead.records.list<Omit<Company, "id" | "logo">>("companies", { limit: 100, expand: ["logo"] })
   )
@@ -132,7 +147,7 @@ interface JobData {
 /** The open jobs (closing today or later), newest first. */
 export async function getJobs(): Promise<Job[]> {
   "use cache"
-  cacheLife("hours")
+  cacheAsContent()
   const [categories, companies, records] = await Promise.all([
     getCategories(),
     getCompanies(),
@@ -201,12 +216,12 @@ export interface Search {
  * The jobs' public search: the search token (public, so it can go in the
  * page), the jobs' search index name (read with the site's key, which needs
  * the schema:read scope too), and a filter for the jobs the site lists: still
- * open, by the same hourly clock as the rest of the site, with a published
+ * open, by the same day as the rest of the site, with a published
  * company and category.
  */
 export async function getSearch(): Promise<Search> {
   "use cache"
-  cacheLife("hours")
+  cacheAsContent()
   const token = process.env.NOHEAD_SEARCH_TOKEN
   if (!token) throw new Error("NOHEAD_SEARCH_TOKEN isn't set: create a search token in the Nohead web app.")
   const { index } = await nohead.collections.searchIndex.get("jobs")

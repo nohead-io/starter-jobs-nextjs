@@ -4,6 +4,7 @@
 import { imageUrl } from "@nohead/sdk/images"
 import { cacheLife } from "next/cache"
 import { ImageResponse } from "next/og"
+import { cacheAsContent } from "./content"
 
 export const size = { width: 1200, height: 630 }
 
@@ -58,7 +59,7 @@ export async function iconImage(px: number, { square = false } = {}) {
  */
 export async function logoOf(src: string, px: number) {
   "use cache"
-  cacheLife("hours")
+  cacheAsContent()
   const response = await fetch(imageUrl(src, { width: px, height: px, format: "png" }))
   if (!response.ok) return null
   return `data:image/png;base64,${Buffer.from(await response.arrayBuffer()).toString("base64")}`

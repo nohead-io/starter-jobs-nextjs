@@ -16,7 +16,7 @@ The demo is Elsewhere, a board for remote jobs at small software companies. The 
 - **An about page**, [`/about`](app/about/page.tsx), linked from the header: what the board is and how it's made. It's written in code, as a board's own story is its own to tell: rewrite it for yours.
 - **A sitemap** of the open jobs, companies and categories, [`/sitemap.xml`](app/sitemap.ts), named in [`/robots.txt`](app/robots.ts), with links from `SITE_URL` as the feeds' are.
 - **Share images** for the site and each job (its company's logo, title and terms), drawn with `next/og` in the site's typeface ([`lib/og.tsx`](lib/og.tsx)), and the site's icon. Pages point to them at the same address as the feeds' links.
-- **Server rendering with Cache Components:** every page is prerendered, its content cached for an hour.
+- **Server rendering with Cache Components:** every page is prerendered and its content cached until it changes: at once when content is published, by a webhook, and at midnight (UTC), when jobs past their closing date leave.
 
 The site reads its content from Nohead through one module, [`lib/content.ts`](lib/content.ts), that every page calls, and shows images through Nohead's image CDN, which resizes them ([`lib/image-loader.ts`](lib/image-loader.ts)).
 
@@ -72,6 +72,8 @@ NOHEAD_SEARCH_TOKEN=eyJ...
 NOHEAD_FORM_KEY=nohead_sk_...
 ```
 
+`NOHEAD_WEBHOOK_SECRET` comes from the webhook that refreshes the site ([below](#refreshing-when-content-is-published)).
+
 Keeping bots out of the application form takes no key: a hidden field keeps out the simplest bots, and on Vercel, BotID checks the visitor's browser too ([below](#deploying-to-vercel)). The form has no rate limit of its own: on a busy board, add one in front of it, such as your host's firewall rules.
 
 ## Deploying to Vercel
@@ -82,9 +84,23 @@ Push the schema and seed the project first ([above](#the-content-model)). The bu
 
 On Vercel, [BotID](https://vercel.com/docs/botid) checks the application form too ([`lib/bot-checks.ts`](lib/bot-checks.ts)), with nothing to set up: its Basic mode, free on every plan, stops simpler bots, and on the Pro plan its Deep Analysis, turned on in the project's **Firewall** settings, stops bots that drive a real browser.
 
+## Refreshing when content is published
+
+Every read from Nohead is cached under one tag, `nohead`, until midnight (UTC), when jobs past their closing date leave the board. A webhook clears it whenever published content changes, so an edit shows on the next visit, with no rebuild: [`app/webhooks/nohead/route.ts`](app/webhooks/nohead/route.ts) checks the request's signature and calls `revalidateTag`.
+
+In the web app, under **Webhooks**, add one:
+
+- **URL:** `https://<your site>/webhooks/nohead`
+- **Events:** `record.*` and `asset.*`
+- **Published content only:** on, so drafts and other unpublished changes don't clear the cache
+
+Set its signing secret as `NOHEAD_WEBHOOK_SECRET`: on Vercel, in the project's **Settings → Environment Variables**, then redeploy.
+
+Until the webhook is set up, an edit shows after midnight (UTC).
+
 ## Passing applications on
 
-Applications arrive in your project's Applications collection, where your team reads them in the web app. To send each one on as it arrives, to the employer's inbox, a chat channel or an applicant tracking system, add a webhook, for `record.created` events with **Published content only** off, pointing at a service of yours. It receives every record created, so it keeps the ones in the Applications collection and forwards them however suits you.
+Applications arrive in your project's Applications collection, where your team reads them in the web app. To send each one on as it arrives, to the employer's inbox, a chat channel or an applicant tracking system, add a second webhook, for `record.created` events with **Published content only** off, pointing at a service of yours. It receives every record created, so it keeps the ones in the Applications collection and forwards them however suits you.
 
 ## Development
 

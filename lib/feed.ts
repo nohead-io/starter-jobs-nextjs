@@ -1,6 +1,5 @@
 import { Feed } from "feed"
-import { cacheLife } from "next/cache"
-import { getCategory, getJobs } from "./content"
+import { cacheAsContent, getCategory, getJobs } from "./content"
 import { dateOf, placeOf, salaryOf } from "./format"
 import { siteUrl } from "./site"
 
@@ -22,7 +21,7 @@ function escape(text: string) {
  */
 export async function feedOf(slug?: string): Promise<string | null> {
   "use cache"
-  cacheLife("hours")
+  cacheAsContent()
   const [jobs, category] = await Promise.all([getJobs(), slug ? getCategory(slug) : undefined])
   if (slug && !category) return null
   const feed = new Feed({

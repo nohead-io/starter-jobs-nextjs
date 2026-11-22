@@ -61,7 +61,9 @@ export default function AboutPage() {
             server, unpublished, for someone to read.
           </li>
           <li>
-            <strong>Pages</strong> are built ahead of time and refreshed every hour.
+            <strong>Pages</strong> are built ahead of time and{" "}
+            <a href="https://docs.nohead.io/guides/webhooks">rebuilt by a webhook</a> when content is
+            published.
           </li>
           <li>
             <strong>The site</strong> is <a href="https://nextjs.org">Next.js</a>, with{" "}
