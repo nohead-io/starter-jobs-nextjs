@@ -11,6 +11,7 @@ The demo is Elsewhere, a board for remote jobs at small software companies. The 
 - **Jobs** with a company, a category, a salary range, where the work happens, and a closing date; a job leaves the site the day after it closes, with nobody unpublishing it.
 - **Companies** with a logo and a page listing their open jobs; **categories** with a page each.
 - **Search and filters** on the home page, with Nohead's [public search](https://docs.nohead.io/guides/public-search) and [InstantSearch](https://www.algolia.com/doc/guides/building-search-ui/what-is-instantsearch/react/): type to search, and narrow the jobs by category, type, workplace, location and company, each choice showing how many jobs it leaves. Each hit carries its company's name and logo, so a result needs no other request. The search and filters are kept in the page's address (`/?q=design&type=Contract`), so Back from a job returns to them and a filtered list can be shared.
+- **Applications from visitors:** a form on each job's page, sent by a server action that creates an unpublished record with a key of its own, which never leaves the server. Bots are kept out by a hidden field.
 - **RSS feeds** of the open jobs, [`/feed.xml`](app/feed.xml/route.ts) and one per category (`/categories/<slug>/feed.xml`), for feed readers, and for email alerts: newsletter tools can email a feed's new items to their subscribers. Their links use `SITE_URL`.
 - **An about page**, [`/about`](app/about/page.tsx), linked from the header: what the board is and how it's made. It's written in code, as a board's own story is its own to tell: rewrite it for yours.
 - **A sitemap** of the open jobs, companies and categories, [`/sitemap.xml`](app/sitemap.ts), named in [`/robots.txt`](app/robots.ts), with links from `SITE_URL` as the feeds' are.
@@ -21,7 +22,7 @@ The site reads its content from Nohead through one module, [`lib/content.ts`](li
 
 ## The content model
 
-[`nohead.schema.yaml`](nohead.schema.yaml) is the Nohead project's content model as code: the jobs, the companies hiring and the categories the site shows. The [Nohead CLI](https://github.com/nohead-io/nohead-cli) pushes it to a project:
+[`nohead.schema.yaml`](nohead.schema.yaml) is the Nohead project's content model as code: the jobs, the companies hiring and the categories the site shows, and the applications visitors send, which stay unpublished. The [Nohead CLI](https://github.com/nohead-io/nohead-cli) pushes it to a project:
 
 ```bash
 pnpm nohead login
@@ -63,11 +64,19 @@ The site needs these from your Nohead project, set in `.env.local` (copy [`.env.
 
 - **`NOHEAD_API_KEY`**, an API key of its own: in the web app, under **API keys**, create one with **Published records only** on and the **Read records**, **Read assets** and **Read schema** scopes. The build needs it: every page is prerendered from the project's content, and the jobs' search index name is read with it.
 - **`NOHEAD_SEARCH_TOKEN`**, a search token for the home page's search: create one on the project's **Search tokens** page. It is public: it goes in the page, and finds only the published jobs.
+- **`NOHEAD_FORM_KEY`**, a second API key, for the application form: with only the **Write records** scope, and **Published records only** off (such a key can't write). It can't read anything, and the server action picks the fields it sets, so a visitor can only send an application. Applications stay unpublished: the site's own key and the search token can't see them, while your team reads them in the web app's Applications collection.
 
 ```bash
 NOHEAD_API_KEY=nohead_pk_...
 NOHEAD_SEARCH_TOKEN=eyJ...
+NOHEAD_FORM_KEY=nohead_sk_...
 ```
+
+Keeping bots out of the application form takes no key: a hidden field keeps out the simplest bots. The form has no rate limit of its own: on a busy board, add one in front of it, such as your host's firewall rules.
+
+## Passing applications on
+
+Applications arrive in your project's Applications collection, where your team reads them in the web app. To send each one on as it arrives, to the employer's inbox, a chat channel or an applicant tracking system, add a webhook, for `record.created` events with **Published content only** off, pointing at a service of yours. It receives every record created, so it keeps the ones in the Applications collection and forwards them however suits you.
 
 ## Development
 

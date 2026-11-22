@@ -2,11 +2,15 @@ import type { Metadata } from "next"
 import { BriefcaseBusiness, Globe } from "lucide-react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import { ApplyForm } from "@/components/apply-form"
 import { CompanyLogo } from "@/components/company-logo"
+import { JobTabs } from "@/components/job-tabs"
+import { buttonVariants } from "@/components/ui/button"
 import { getJob, getJobs } from "@/lib/content"
 import { paramsOf } from "@/lib/static-params"
 import { dateOf, placeOf, salaryOf } from "@/lib/format"
 import { jobPostingOf } from "@/lib/job-posting"
+import { apply } from "./actions"
 
 export async function generateStaticParams() {
   return paramsOf(await getJobs())
@@ -47,9 +51,15 @@ export default async function JobPage({ params }: PageProps<"/jobs/[slug]">) {
         <p className="text-muted-foreground mt-4 max-w-2xl text-lg text-pretty">{job.summary}</p>
       </header>
 
-      <aside className="order-last md:order-none md:col-start-2 md:row-start-2">
+      <aside className="order-last md:order-none md:col-start-2 md:row-span-2 md:row-start-2 md:-mt-8">
         {/* Stays in view as the description scrolls, in windows tall enough for all of it. */}
         <div className="md:top-8 md:[@media(min-height:36rem)]:sticky">
+          {/* On phones the tabs, the form's among them, come just before the sidebar. */}
+          <div className="hidden md:block">
+            <a href="#apply" className={buttonVariants({ size: "lg", className: "mb-6 h-10 w-full" })}>
+              Apply for this job
+            </a>
+          </div>
           <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2.5 border-t pt-5 text-sm">
             {facts.map(([term, value, figures]) => (
               <div key={term} className="contents">
@@ -96,9 +106,15 @@ export default async function JobPage({ params }: PageProps<"/jobs/[slug]">) {
         </div>
       </aside>
 
-      <article
-        className="prose prose-neutral dark:prose-invert prose-headings:tracking-tight prose-h2:text-xl max-w-none min-w-0 border-t pt-5 md:col-start-1 lg:max-w-2xl"
-        dangerouslySetInnerHTML={{ __html: job.description }}
+      <JobTabs
+        className="min-w-0 md:col-start-1 lg:max-w-2xl"
+        description={
+          <div
+            className="prose prose-neutral dark:prose-invert prose-headings:tracking-tight prose-h2:text-xl max-w-none"
+            dangerouslySetInnerHTML={{ __html: job.description }}
+          />
+        }
+        apply={<ApplyForm action={apply.bind(null, job.slug)} company={company.name} />}
       />
     </div>
   )

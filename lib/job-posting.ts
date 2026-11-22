@@ -61,5 +61,7 @@ export function jobPostingOf(job: Job): WithContext<JobPosting> {
         unitText: "YEAR",
       },
     },
+    // Applying takes one form, on the job's own page.
+    directApply: true,
   }
 }

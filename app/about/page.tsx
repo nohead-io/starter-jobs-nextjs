@@ -26,8 +26,9 @@ export default function AboutPage() {
         <h2>A board that isn&apos;t real</h2>
         <p>
           Every company on Elsewhere, its logo and its jobs were written for this demo. None of them is
-          hiring. Everything works as it would on a real board, though: you can search and filter the jobs and
-          follow new ones by <a href="/feed.xml">RSS</a>.
+          hiring. Everything works as it would on a real board, though: you can search and filter the jobs,
+          follow new jobs by <a href="/feed.xml">RSS</a> and apply to a job. What you send is kept as it would
+          be, unpublished, and deleted regularly; nobody reads it.
         </p>
 
         <h2>Why it&apos;s here</h2>
@@ -53,6 +54,11 @@ export default function AboutPage() {
           <li>
             <strong>Logos</strong> are resized and converted by Nohead&apos;s{" "}
             <a href="https://docs.nohead.io/guides/images">image URLs</a>.
+          </li>
+          <li>
+            <strong>Applications</strong> are{" "}
+            <a href="https://docs.nohead.io/guides/writing-content">written to Nohead</a> by the site&apos;s
+            server, unpublished, for someone to read.
           </li>
           <li>
             <strong>Pages</strong> are built ahead of time and refreshed every hour.

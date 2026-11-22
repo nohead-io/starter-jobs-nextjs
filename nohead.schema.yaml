@@ -149,3 +149,29 @@ collections:
         required: true
         search:
           sortable: true
+  applications:
+    description: Applications sent from the jobs' pages. They stay unpublished, so the site can't read them.
+    fields:
+      job:
+        type: relation
+        required: true
+        collection: jobs
+        search:
+          filterable: true
+      name:
+        type: text
+        required: true
+        max_length: 120
+      email:
+        type: text
+        required: true
+        format: email
+      message:
+        type: long_text
+        required: true
+        max_length: 4000
+        description: Why they'd like the job, in their own words.
+      link:
+        type: text
+        format: url
+        description: A portfolio, a profile or a CV online, if they gave one.

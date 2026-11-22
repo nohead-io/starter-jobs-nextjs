@@ -33,6 +33,8 @@ export interface Category {
 }
 
 export interface Job {
+  /** The job's record ID, which an application names. */
+  id: string
   slug: string
   title: string
   company: Company
@@ -146,7 +148,7 @@ export async function getJobs(): Promise<Job[]> {
   const companyById = new Map(companies.map((company) => [company.id, company]))
   const categoryById = new Map(categories.map((category) => [category.id, category]))
   return records
-    .flatMap(({ data }): Job[] => {
+    .flatMap(({ id, data }): Job[] => {
       // A job keeps naming its company and category after they're
       // unpublished or deleted; with nothing to show for them, it's left out.
       const company = companyById.get(data.company)
@@ -154,6 +156,7 @@ export async function getJobs(): Promise<Job[]> {
       if (!company || !category) return []
       return [
         {
+          id,
           slug: data.slug,
           title: data.title,
           company,
