@@ -10,7 +10,7 @@ The demo is Elsewhere, a board for remote jobs at small software companies. The 
 
 - **Jobs** with a company, a category, a salary range, where the work happens, and a closing date; a job leaves the site the day after it closes, with nobody unpublishing it.
 - **Companies** with a logo and a page listing their open jobs; **categories** with a page each.
-- **Search and filters** on the home page, in the browser: type to search, and narrow the jobs by category, type, workplace, location and company, each choice showing how many jobs it leaves. The search and filters are kept in the page's address (`/?q=design&type=Contract`), so Back from a job returns to them and a filtered list can be shared.
+- **Search and filters** on the home page, with Nohead's [public search](https://docs.nohead.io/guides/public-search) and [InstantSearch](https://www.algolia.com/doc/guides/building-search-ui/what-is-instantsearch/react/): type to search, and narrow the jobs by category, type, workplace, location and company, each choice showing how many jobs it leaves. Each hit carries its company's name and logo, so a result needs no other request. The search and filters are kept in the page's address (`/?q=design&type=Contract`), so Back from a job returns to them and a filtered list can be shared.
 - **RSS feeds** of the open jobs, [`/feed.xml`](app/feed.xml/route.ts) and one per category (`/categories/<slug>/feed.xml`), for feed readers, and for email alerts: newsletter tools can email a feed's new items to their subscribers. Their links use `SITE_URL`.
 - **An about page**, [`/about`](app/about/page.tsx), linked from the header: what the board is and how it's made. It's written in code, as a board's own story is its own to tell: rewrite it for yours.
 - **A sitemap** of the open jobs, companies and categories, [`/sitemap.xml`](app/sitemap.ts), named in [`/robots.txt`](app/robots.ts), with links from `SITE_URL` as the feeds' are.
@@ -59,13 +59,15 @@ This repository's history builds the site one step at a time. It starts with a p
 
 ## Keys
 
-The site reads with an API key of its own: in the Nohead web app, under **API keys**, create one with **Published records only** on and the **Read records** and **Read assets** scopes. Copy [`.env.example`](.env.example) to `.env.local` and set it there:
+The site needs these from your Nohead project, set in `.env.local` (copy [`.env.example`](.env.example)):
+
+- **`NOHEAD_API_KEY`**, an API key of its own: in the web app, under **API keys**, create one with **Published records only** on and the **Read records**, **Read assets** and **Read schema** scopes. The build needs it: every page is prerendered from the project's content, and the jobs' search index name is read with it.
+- **`NOHEAD_SEARCH_TOKEN`**, a search token for the home page's search: create one on the project's **Search tokens** page. It is public: it goes in the page, and finds only the published jobs.
 
 ```bash
 NOHEAD_API_KEY=nohead_pk_...
+NOHEAD_SEARCH_TOKEN=eyJ...
 ```
-
-The build needs it: every page is prerendered from the project's content.
 
 ## Development
 

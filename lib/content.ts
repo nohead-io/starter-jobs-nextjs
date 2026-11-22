@@ -11,6 +11,7 @@
 import "server-only"
 import { Nohead } from "@nohead/sdk"
 import { cacheLife } from "next/cache"
+import { newestFirst } from "./format"
 
 export interface Company {
   /** The company's record ID, which its jobs name. */
@@ -58,12 +59,12 @@ export type JobRow = Pick<
   company: Pick<Company, "name" | "logo">
 }
 
-/** A job as the home page's search board gets it: its row, its category's name for the filters, and its summary for the search. */
-export type BoardJob = JobRow & Pick<Job, "summary"> & { category: Pick<Category, "name"> }
+/** A job as the home page's search board gets it: its row, and its category's name for the filters. */
+export type BoardJob = JobRow & { category: Pick<Category, "name"> }
 
 /** Only what the board uses: the page sends it to the browser. */
 export function boardJobOf(job: Job): BoardJob {
-  const { slug, title, type, workplace, location, salary, postedOn, summary, company, category } = job
+  const { slug, title, type, workplace, location, salary, postedOn, company, category } = job
   return {
     slug,
     title,
@@ -72,14 +73,13 @@ export function boardJobOf(job: Job): BoardJob {
     location,
     salary,
     postedOn,
-    summary,
     company: { name: company.name, logo: company.logo },
     category: { name: category.name },
   }
 }
 
 // The SDK reads NOHEAD_API_KEY: a key with "Published records only" on and
-// the records:read and assets:read scopes.
+// the records:read, assets:read and schema:read scopes.
 // A list is read page by page as it's iterated, 100 records a request, and
 // Array.fromAsync gathers every page.
 const nohead = new Nohead()
@@ -169,7 +169,7 @@ export async function getJobs(): Promise<Job[]> {
         },
       ]
     })
-    .sort((a, b) => b.postedOn.localeCompare(a.postedOn) || a.title.localeCompare(b.title))
+    .sort(newestFirst)
 }
 
 /** An open job, by its slug. */
@@ -185,4 +185,33 @@ export async function getCompany(slug: string) {
 /** A category, by its slug. */
 export async function getCategory(slug: string) {
   return (await getCategories()).find((category) => category.slug === slug)
+}
+
+/** What the browser needs to search the jobs, and the filter that keeps out what the site doesn't list. */
+export interface Search {
+  token: string
+  index: string
+  filter: string
+}
+
+/**
+ * The jobs' public search: the search token (public, so it can go in the
+ * page), the jobs' search index name (read with the site's key, which needs
+ * the schema:read scope too), and a filter for the jobs the site lists: still
+ * open, by the same hourly clock as the rest of the site, with a published
+ * company and category.
+ */
+export async function getSearch(): Promise<Search> {
+  "use cache"
+  cacheLife("hours")
+  const token = process.env.NOHEAD_SEARCH_TOKEN
+  if (!token) throw new Error("NOHEAD_SEARCH_TOKEN isn't set: create a search token in the Nohead web app.")
+  const { index } = await nohead.collections.searchIndex.get("jobs")
+  // Dates are Unix seconds in search: today's, at midnight UTC.
+  const today = Math.floor(Date.now() / 86_400_000) * 86_400
+  return {
+    token,
+    index,
+    filter: `data.closes_on >= ${today} AND expanded.company.data.name EXISTS AND expanded.category.data.name EXISTS`,
+  }
 }

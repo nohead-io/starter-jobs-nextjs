@@ -1,9 +1,9 @@
 import { JobSearch } from "@/components/job-search"
-import { boardJobOf, getCompanies, getJobs } from "@/lib/content"
+import { boardJobOf, getCompanies, getJobs, getSearch } from "@/lib/content"
 import { countOf } from "@/lib/format"
 
 export default async function Home() {
-  const [jobs, companies] = await Promise.all([getJobs(), getCompanies()])
+  const [jobs, companies, search] = await Promise.all([getJobs(), getCompanies(), getSearch()])
   const hiring = companies.filter((company) => jobs.some((job) => job.company.slug === company.slug))
   return (
     <>
@@ -19,8 +19,8 @@ export default async function Home() {
       </section>
 
       <div className="mt-7">
-        {/* Every open job, searched and filtered in the browser. */}
-        <JobSearch jobs={jobs.map(boardJobOf)} />
+        {/* Every open job, rendered here first; Nohead's public search takes over in the browser. */}
+        <JobSearch jobs={jobs.map(boardJobOf)} search={search} />
       </div>
     </>
   )

@@ -47,7 +47,8 @@ export default function AboutPage() {
             <a href="https://docs.nohead.io/guides/reading-content">read with the Nohead SDK</a>.
           </li>
           <li>
-            <strong>Search and filters</strong> run in the browser, over the jobs the page was built with.
+            <strong>Search and filters</strong> run in the browser, against Nohead&apos;s{" "}
+            <a href="https://docs.nohead.io/guides/public-search">public search</a>.
           </li>
           <li>
             <strong>Logos</strong> are resized and converted by Nohead&apos;s{" "}

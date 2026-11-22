@@ -16,6 +16,14 @@ export function salaryOf({ min, max, currency }: JobSummary["salary"]) {
   return range.replace(/(\d)K\b/g, "$1k")
 }
 
+/** The order jobs are listed in, for sort(): newest first, and those posted the same day by title. */
+export function newestFirst(
+  a: Pick<JobSummary, "postedOn" | "title">,
+  b: Pick<JobSummary, "postedOn" | "title">
+) {
+  return b.postedOn.localeCompare(a.postedOn) || a.title.localeCompare(b.title)
+}
+
 /** A count and its noun, such as "1 open job" or "12 open jobs". */
 export function countOf(count: number, one: string, many: string) {
   return `${count} ${count === 1 ? one : many}`
