@@ -1,3 +1,4 @@
+import { withBotId } from "botid/next/config"
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
@@ -20,4 +21,5 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default nextConfig
+// Serves BotID's script and checks from the site's own address (lib/bot-checks.ts).
+export default withBotId(nextConfig)

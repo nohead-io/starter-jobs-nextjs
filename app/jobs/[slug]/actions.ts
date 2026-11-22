@@ -1,7 +1,7 @@
 "use server"
 
 import { Nohead, ValidationError } from "@nohead/sdk"
-import { sentByBot } from "@/lib/bot-checks"
+import { verdictOf } from "@/lib/bot-checks"
 import { getJob } from "@/lib/content"
 
 /** The fields a visitor fills in. The server action picks these, and nothing else, from the form. */
@@ -27,8 +27,14 @@ export async function apply(slug: string, _previous: ApplyState, form: FormData)
   const text = (name: string) => String(form.get(name) ?? "").trim()
   const values = { name: text("name"), email: text("email"), message: text("message"), link: text("link") }
 
-  // A bot is told its form was sent, so it doesn't try again.
-  if (sentByBot(form)) return { sent: true }
+  const verdict = await verdictOf(form)
+  if (verdict === "bot") return { sent: true }
+  if (verdict === "refused")
+    return {
+      sent: false,
+      values,
+      error: "This browser couldn't be checked. Reload the page and send it again.",
+    }
 
   const job = await getJob(slug)
   if (!job) return { sent: false, values, error: "This job has closed." }

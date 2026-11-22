@@ -11,8 +11,8 @@ The demo is Elsewhere, a board for remote jobs at small software companies. The 
 - **Jobs** with a company, a category, a salary range, where the work happens, and a closing date; a job leaves the site the day after it closes, with nobody unpublishing it.
 - **Companies** with a logo and a page listing their open jobs; **categories** with a page each.
 - **Search and filters** on the home page, with Nohead's [public search](https://docs.nohead.io/guides/public-search) and [InstantSearch](https://www.algolia.com/doc/guides/building-search-ui/what-is-instantsearch/react/): type to search, and narrow the jobs by category, type, workplace, location and company, each choice showing how many jobs it leaves. Each hit carries its company's name and logo, so a result needs no other request. The search and filters are kept in the page's address (`/?q=design&type=Contract`), so Back from a job returns to them and a filtered list can be shared.
-- **Applications from visitors:** a form on each job's page, sent by a server action that creates an unpublished record with a key of its own, which never leaves the server. Bots are kept out by a hidden field.
-- **RSS feeds** of the open jobs, [`/feed.xml`](app/feed.xml/route.ts) and one per category (`/categories/<slug>/feed.xml`), for feed readers, and for email alerts: newsletter tools can email a feed's new items to their subscribers. Their links use `SITE_URL`.
+- **Applications from visitors:** a form on each job's page, sent by a server action that creates an unpublished record with a key of its own, which never leaves the server. Bots are kept out by a hidden field and, on Vercel, [Vercel BotID](https://vercel.com/docs/botid), which checks the visitor's browser without asking them anything.
+- **RSS feeds** of the open jobs, [`/feed.xml`](app/feed.xml/route.ts) and one per category (`/categories/<slug>/feed.xml`), for feed readers, and for email alerts: newsletter tools can email a feed's new items to their subscribers. Their links use `SITE_URL`, or on Vercel the production domain.
 - **An about page**, [`/about`](app/about/page.tsx), linked from the header: what the board is and how it's made. It's written in code, as a board's own story is its own to tell: rewrite it for yours.
 - **A sitemap** of the open jobs, companies and categories, [`/sitemap.xml`](app/sitemap.ts), named in [`/robots.txt`](app/robots.ts), with links from `SITE_URL` as the feeds' are.
 - **Share images** for the site and each job (its company's logo, title and terms), drawn with `next/og` in the site's typeface ([`lib/og.tsx`](lib/og.tsx)), and the site's icon. Pages point to them at the same address as the feeds' links.
@@ -72,7 +72,15 @@ NOHEAD_SEARCH_TOKEN=eyJ...
 NOHEAD_FORM_KEY=nohead_sk_...
 ```
 
-Keeping bots out of the application form takes no key: a hidden field keeps out the simplest bots. The form has no rate limit of its own: on a busy board, add one in front of it, such as your host's firewall rules.
+Keeping bots out of the application form takes no key: a hidden field keeps out the simplest bots, and on Vercel, BotID checks the visitor's browser too ([below](#deploying-to-vercel)). The form has no rate limit of its own: on a busy board, add one in front of it, such as your host's firewall rules.
+
+## Deploying to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fnohead-io%2Fstarter-jobs-nextjs&env=NOHEAD_API_KEY%2CNOHEAD_SEARCH_TOKEN%2CNOHEAD_FORM_KEY&envDescription=The%20site%20key%2C%20search%20token%20and%20form%20key%20from%20your%20Nohead%20project&envLink=https%3A%2F%2Fgithub.com%2Fnohead-io%2Fstarter-jobs-nextjs%23keys)
+
+Push the schema and seed the project first ([above](#the-content-model)). The button copies this repository to your GitHub account and creates a Vercel project for it, asking for the [keys](#keys). The feeds, the sitemap and the share images use the project's production domain; `SITE_URL` sets another.
+
+On Vercel, [BotID](https://vercel.com/docs/botid) checks the application form too ([`lib/bot-checks.ts`](lib/bot-checks.ts)), with nothing to set up: its Basic mode, free on every plan, stops simpler bots, and on the Pro plan its Deep Analysis, turned on in the project's **Firewall** settings, stops bots that drive a real browser.
 
 ## Passing applications on
 
