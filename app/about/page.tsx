@@ -42,11 +42,16 @@ export default function AboutPage() {
         <h2>How it&apos;s made</h2>
         <ul>
           <li>
-            <strong>Content</strong> lives in the repository, as files: the jobs in Markdown, the companies
-            hiring and the categories in YAML.
+            <strong>Content</strong> lives in a Nohead project: jobs, the companies hiring and the categories
+            they&apos;re in, defined as code in the repository and{" "}
+            <a href="https://docs.nohead.io/guides/reading-content">read with the Nohead SDK</a>.
           </li>
           <li>
             <strong>Search and filters</strong> run in the browser, over the jobs the page was built with.
+          </li>
+          <li>
+            <strong>Logos</strong> are resized and converted by Nohead&apos;s{" "}
+            <a href="https://docs.nohead.io/guides/images">image URLs</a>.
           </li>
           <li>
             <strong>Pages</strong> are built ahead of time and refreshed every hour.

@@ -17,7 +17,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const job = await getJob((await params).slug)
   if (!job) notFound()
   const { company } = job
-  const logo = company.logo && (await logoOf(company.logo))
+  const logo = company.logo && (await logoOf(company.logo, 144))
   const facts = `${placeOf(job)}, ${salaryOf(job.salary)} a year, ${job.type.toLowerCase()}`
   return shareImage(
     <div style={{ display: "flex", flexDirection: "column" }}>

@@ -1,9 +1,7 @@
 // The site's share images (Open Graph): a frame with the airmail stripe and
 // the site's name, around what each page puts in it. app/opengraph-image.tsx
 // is the site's own; app/jobs/[slug]/opengraph-image.tsx is each job's.
-import { readFile } from "node:fs/promises"
-import { join } from "node:path"
-
+import { imageUrl } from "@nohead/sdk/images"
 import { cacheLife } from "next/cache"
 import { ImageResponse } from "next/og"
 
@@ -54,10 +52,16 @@ export async function iconImage(px: number, { square = false } = {}) {
   )
 }
 
-/** A logo from seed/images (/seed-images/…), an SVG, in a data URL next/og draws. */
-export async function logoOf(src: string) {
-  const file = join(process.cwd(), "seed", "images", src.replace(/^\/seed-images\//, ""))
-  return `data:image/svg+xml;base64,${(await readFile(file)).toString("base64")}`
+/**
+ * A logo from Nohead's image CDN as a PNG `px` pixels square, in a data URL
+ * (next/og draws neither WebP nor every SVG), or null if it can't be had.
+ */
+export async function logoOf(src: string, px: number) {
+  "use cache"
+  cacheLife("hours")
+  const response = await fetch(imageUrl(src, { width: px, height: px, format: "png" }))
+  if (!response.ok) return null
+  return `data:image/png;base64,${Buffer.from(await response.arrayBuffer()).toString("base64")}`
 }
 
 const name = "Elsewhere"

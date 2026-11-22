@@ -17,7 +17,7 @@ The demo is Elsewhere, a board for remote jobs at small software companies. The 
 - **Share images** for the site and each job (its company's logo, title and terms), drawn with `next/og` in the site's typeface ([`lib/og.tsx`](lib/og.tsx)), and the site's icon. Pages point to them at the same address as the feeds' links.
 - **Server rendering with Cache Components:** every page is prerendered, its content cached for an hour.
 
-At this step the site reads its content from [`seed/`](seed) (Markdown, YAML and the logos), through one module, [`lib/content.ts`](lib/content.ts), that every page calls.
+The site reads its content from Nohead through one module, [`lib/content.ts`](lib/content.ts), that every page calls, and shows images through Nohead's image CDN, which resizes them ([`lib/image-loader.ts`](lib/image-loader.ts)).
 
 ## The content model
 
@@ -56,6 +56,16 @@ This repository's history builds the site one step at a time. It starts with a p
 9. Jobs posted by visitors, reviewed before they go live
 
 `git log --reverse` lists them.
+
+## Keys
+
+The site reads with an API key of its own: in the Nohead web app, under **API keys**, create one with **Published records only** on and the **Read records** and **Read assets** scopes. Copy [`.env.example`](.env.example) to `.env.local` and set it there:
+
+```bash
+NOHEAD_API_KEY=nohead_pk_...
+```
+
+The build needs it: every page is prerendered from the project's content.
 
 ## Development
 

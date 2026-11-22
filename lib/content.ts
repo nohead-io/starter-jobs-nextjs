@@ -1,26 +1,31 @@
-// The site's content, read from the seed files in seed/: the jobs, the
-// companies hiring and the categories. Every page reads through these functions, so where the
+// The site's content, read from Nohead: the jobs, the companies hiring and
+// the categories. Every page reads through these functions, so where the
 // content comes from can change here alone.
 //
 // Each function is cached ('use cache') for an hour: pages are served from
 // the cache, and a job past its closing date drops out within the hour,
 // without anyone touching it.
-import { readdir, readFile } from "node:fs/promises"
-import { join } from "node:path"
-import { marked } from "marked"
+//
+// Server-side only: importing it from a client component fails the build, so
+// the site's key never reaches the browser.
+import "server-only"
+import { Nohead } from "@nohead/sdk"
 import { cacheLife } from "next/cache"
-import { parse } from "yaml"
 
 export interface Company {
+  /** The company's record ID, which its jobs name. */
+  id: string
   slug: string
   name: string
-  /** The logo's image URL, or null when there's none. */
+  /** The logo's image URL, or null when its asset has been deleted. */
   logo: string | null
   website: string
   about: string
 }
 
 export interface Category {
+  /** The category's record ID, which its jobs name. */
+  id: string
   slug: string
   name: string
   description: string
@@ -45,7 +50,7 @@ export interface Job {
 /** A job without its description, for lists. */
 export type JobSummary = Omit<Job, "description">
 
-/** What a job's row in a list shows. */
+/** What a job's row in a list shows: from the site's content, or from a search hit. */
 export type JobRow = Pick<
   Job,
   "slug" | "title" | "type" | "workplace" | "location" | "salary" | "postedOn"
@@ -73,85 +78,97 @@ export function boardJobOf(job: Job): BoardJob {
   }
 }
 
-const seed = join(process.cwd(), "seed")
-
-/** A Markdown file's YAML front matter and its body. */
-async function markdown(path: string) {
-  const text = await readFile(path, "utf8")
-  const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(text)
-  if (!match) throw new Error(`${path} has no front matter`)
-  return { data: parse(match[1]!), body: match[2]!.trim() }
-}
+// The SDK reads NOHEAD_API_KEY: a key with "Published records only" on and
+// the records:read and assets:read scopes.
+// A list is read page by page as it's iterated, 100 records a request, and
+// Array.fromAsync gathers every page.
+const nohead = new Nohead()
 
 /** The categories, in the order the site lists them. */
 export async function getCategories(): Promise<Category[]> {
   "use cache"
   cacheLife("hours")
-  const categories: Category[] = parse(await readFile(join(seed, "categories.yaml"), "utf8"))
-  return categories.map(({ slug, name, description }) => ({ slug, name, description }))
+  const records = await Array.fromAsync(
+    nohead.records.list<Omit<Category, "id">>("categories", { limit: 100, sort: "order" })
+  )
+  return records.map(({ id, data: { slug, name, description } }) => ({ id, slug, name, description }))
 }
 
 /** The companies, by name. */
 export async function getCompanies(): Promise<Company[]> {
   "use cache"
   cacheLife("hours")
-  type SeedCompany = Omit<Company, "logo"> & { logo: { image: string } }
-  const companies: SeedCompany[] = parse(await readFile(join(seed, "companies.yaml"), "utf8"))
-  return companies
-    .map(({ slug, name, logo, website, about }) => ({
-      slug,
-      name,
-      // Served from seed/images by app/seed-images.
-      logo: `/seed-images/${logo.image.replace(/^images\//, "")}`,
-      website,
-      about,
-    }))
+  const records = await Array.fromAsync(
+    nohead.records.list<Omit<Company, "id" | "logo">>("companies", { limit: 100, expand: ["logo"] })
+  )
+  return records
+    .map(({ id, data: { slug, name, website, about }, expanded }) => {
+      // A deleted asset expands to null, while the company still names it.
+      const logo = expanded?.logo as { image_url: string } | null | undefined
+      return { id, slug, name, logo: logo?.image_url ?? null, website, about }
+    })
     .sort((a, b) => a.name.localeCompare(b.name))
 }
 
-/**
- * The seed's dates, moved forward together so its newest job was posted
- * today: the demo jobs are open, and recent, whenever the site is built.
- */
-function movedForward(postedOn: string[]) {
-  const day = 24 * 60 * 60 * 1000
-  const newest = Math.max(...postedOn.map((date) => Date.parse(date)))
-  const shift = Math.max(0, Math.floor((Date.now() - newest) / day)) * day
-  return (date: string) => new Date(Date.parse(date) + shift).toISOString().slice(0, 10)
+interface JobData {
+  title: string
+  slug: string
+  company: string
+  category: string
+  type: string
+  workplace: string
+  location: string
+  salary_min: number
+  salary_max: number
+  salary_currency: string
+  posted_on: string
+  closes_on: string
+  summary: string
+  description: string
 }
 
 /** The open jobs (closing today or later), newest first. */
 export async function getJobs(): Promise<Job[]> {
   "use cache"
   cacheLife("hours")
-  const folder = join(seed, "jobs")
-  const [categories, companies, files] = await Promise.all([getCategories(), getCompanies(), readdir(folder)])
-  const companyBySlug = new Map(companies.map((company) => [company.slug, company]))
-  const categoryBySlug = new Map(categories.map((category) => [category.slug, category]))
-  // Today's date in UTC, as YYYY-MM-DD.
-  const today = new Date().toISOString().slice(0, 10)
-  const entries = await Promise.all(
-    files.filter((file) => file.endsWith(".md")).map((file) => markdown(join(folder, file)))
-  )
-  const moved = movedForward(entries.map(({ data }) => data.posted_on))
-  const jobs = await Promise.all(
-    entries.map(async ({ data, body }): Promise<Job> => ({
-      slug: data.slug,
-      title: data.title,
-      company: companyBySlug.get(data.company)!,
-      category: categoryBySlug.get(data.category)!,
-      type: data.type,
-      workplace: data.workplace,
-      location: data.location,
-      salary: { min: data.salary_min, max: data.salary_max, currency: data.salary_currency },
-      postedOn: moved(data.posted_on),
-      closesOn: moved(data.closes_on),
-      summary: data.summary,
-      description: await marked.parse(body),
-    }))
-  )
-  return jobs
-    .filter((job) => job.closesOn >= today)
+  const [categories, companies, records] = await Promise.all([
+    getCategories(),
+    getCompanies(),
+    Array.fromAsync(
+      nohead.records.list<JobData>("jobs", {
+        limit: 100,
+        filter: { closes_on: { gte: "today" } },
+        sort: "-posted_on",
+        rich_text: "html",
+      })
+    ),
+  ])
+  const companyById = new Map(companies.map((company) => [company.id, company]))
+  const categoryById = new Map(categories.map((category) => [category.id, category]))
+  return records
+    .flatMap(({ data }): Job[] => {
+      // A job keeps naming its company and category after they're
+      // unpublished or deleted; with nothing to show for them, it's left out.
+      const company = companyById.get(data.company)
+      const category = categoryById.get(data.category)
+      if (!company || !category) return []
+      return [
+        {
+          slug: data.slug,
+          title: data.title,
+          company,
+          category,
+          type: data.type,
+          workplace: data.workplace,
+          location: data.location,
+          salary: { min: data.salary_min, max: data.salary_max, currency: data.salary_currency },
+          postedOn: data.posted_on,
+          closesOn: data.closes_on,
+          summary: data.summary,
+          description: data.description,
+        },
+      ]
+    })
     .sort((a, b) => b.postedOn.localeCompare(a.postedOn) || a.title.localeCompare(b.title))
 }
 
