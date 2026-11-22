@@ -31,6 +31,16 @@ pnpm nohead schema push   # change it
 
 `pnpm nohead schema pull` writes the project's model back to the file, after a change made in the web app.
 
+## The demo content
+
+[`scripts/seed.ts`](scripts/seed.ts) uploads the demo content in `seed/` to a project and publishes it: the categories, the companies with their logos, and the jobs. Push the schema first, then run it with an API key that has the `records:read`, `records:write` and `assets:write` scopes:
+
+```bash
+NOHEAD_API_KEY=... pnpm seed
+```
+
+It creates what's missing and leaves what's already there alone, matched by slug, so running it again is safe. The jobs' dates move forward together, so the newest was posted the day you seed.
+
 ## Step by step
 
 This repository's history builds the site one step at a time. It starts with a plain Next.js site reading its content from [`seed/`](seed), and each commit after it moves one thing onto Nohead:
