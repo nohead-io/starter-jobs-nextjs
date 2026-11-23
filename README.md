@@ -93,7 +93,7 @@ A job posted on the site is a draft until someone publishes it. In the web app, 
 
 ## Development
 
-It needs Node 24 or newer and [pnpm](https://pnpm.io).
+It needs Node 26 or newer and [pnpm](https://pnpm.io).
 
 ```bash
 pnpm install
