@@ -76,7 +76,7 @@ Every read from Nohead is cached under one tag, `nohead`, until midnight (UTC), 
 In the web app, under **Webhooks**, add one:
 
 - **URL:** `https://<your site>/webhooks/nohead`
-- **Events:** `record.*` and `asset.*`
+- **Events:** all of them (**All events**): with Published content only on, that's changes to published records and the assets they use, and to the content model, which the post form's choices are read from
 - **Published content only:** on, so drafts and other unpublished changes don't clear the cache
 
 Set its signing secret as `NOHEAD_WEBHOOK_SECRET`: on Vercel, in the project's **Settings → Environment Variables**, then redeploy.

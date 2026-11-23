@@ -3,8 +3,9 @@
 // next visit to each page reads it afresh.
 //
 // In the Nohead web app, under Webhooks, point a webhook at
-// https://<your site>/webhooks/nohead with "Published content only" on, for
-// record and asset events, and set its signing secret as NOHEAD_WEBHOOK_SECRET.
+// https://<your site>/webhooks/nohead with "Published content only" and
+// "All events" on (the content model's changes too: the post form's choices
+// are read from it), and set its signing secret as NOHEAD_WEBHOOK_SECRET.
 import { unwrapWebhook, WebhookVerificationError } from "@nohead/sdk/webhooks"
 import { revalidateTag } from "next/cache"
 
