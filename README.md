@@ -43,22 +43,6 @@ NOHEAD_API_KEY=... pnpm seed
 
 It creates what's missing and leaves what's already there alone, matched by slug, so running it again is safe. The jobs' dates move forward together, so the newest was posted the day you seed.
 
-## Step by step
-
-This repository's history builds the site one step at a time. It starts with a plain Next.js site reading its content from [`seed/`](seed), and each commit after it moves one thing onto Nohead:
-
-1. A job board reading seed files
-2. The content model as code
-3. A seed script for the demo content
-4. Reading from Nohead, with no page changing
-5. Search with Nohead's public search
-6. Applications from visitors
-7. Deploying to Vercel
-8. Refreshing when content is published
-9. Jobs posted by visitors, reviewed before they go live
-
-`git log --reverse` lists them.
-
 ## Keys
 
 The site needs these from your Nohead project, set in `.env.local` (copy [`.env.example`](.env.example)):
