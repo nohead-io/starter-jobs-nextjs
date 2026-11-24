@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 
 export const metadata: Metadata = {
   title: "About",
@@ -68,6 +67,8 @@ export default function AboutPage() {
             <a href="https://ui.shadcn.com">shadcn/ui</a> for its interface,{" "}
             <a href="https://lucide.dev">Lucide</a> for icons and{" "}
             <a href="https://fonts.google.com/specimen/Schibsted+Grotesk">Schibsted Grotesk</a> for its type.
+            Its paper plane icon is from{" "}
+            <a href="https://www.streamlinehq.com/icons">Streamline&apos;s free icons</a>.
           </li>
         </ul>
       </div>

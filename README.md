@@ -106,7 +106,7 @@ pnpm format     # Prettier
 
 ## Credits
 
-The typeface is [Schibsted Grotesk](https://fonts.google.com/specimen/Schibsted+Grotesk), under the SIL Open Font License. The interface uses [shadcn/ui](https://ui.shadcn.com) on [Base UI](https://base-ui.com), and icons from [Lucide](https://lucide.dev). The companies' logos are made for this demo, except Quillmark's feather, from Font Awesome: [`seed/images/README.md`](seed/images/README.md) credits it.
+The typeface is [Schibsted Grotesk](https://fonts.google.com/specimen/Schibsted+Grotesk), under the SIL Open Font License. The interface uses [shadcn/ui](https://ui.shadcn.com) on [Base UI](https://base-ui.com), and icons from [Lucide](https://lucide.dev). The site's icon, a paper plane, is the "Send Email" icon from [Streamline](https://www.streamlinehq.com/icons)'s free Core set, under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). The companies' logos are made for this demo, except Quillmark's feather, from Font Awesome: [`seed/images/README.md`](seed/images/README.md) credits it.
 
 ## License
 
