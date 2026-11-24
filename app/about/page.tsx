@@ -64,7 +64,7 @@ export default function AboutPage() {
           </li>
           <li>
             <strong>Pages</strong> are built ahead of time and{" "}
-            <a href="https://docs.nohead.io/guides/webhooks">rebuilt by a webhook</a> when content is
+            <a href="https://docs.nohead.io/guides/webhooks">refreshed by a webhook</a> when content is
             published.
           </li>
           <li>
@@ -77,10 +77,8 @@ export default function AboutPage() {
 
         <h2>Make one of your own</h2>
         <p>
-          The code is <a href={repository}>on GitHub</a>, under the MIT licence. Its history builds the site
-          one step at a time, from a plain Next.js site reading files to everything above, so you can follow
-          how each part is made. Its README says how to connect a copy to your own Nohead project, fill it
-          with your own jobs and deploy it.
+          The code is <a href={repository}>on GitHub</a>, under the MIT licence. Its README says how to
+          connect a copy to your own Nohead project, fill it with your own jobs and deploy it.
         </p>
       </div>
     </article>

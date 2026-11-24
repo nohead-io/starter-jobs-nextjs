@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Rss } from "lucide-react"
 import { Schibsted_Grotesk } from "next/font/google"
+import { MadeUp } from "@/components/made-up"
 import { SiteHeader } from "@/components/site-header"
 import { siteUrl } from "@/lib/site"
 import "./globals.css"
@@ -27,9 +28,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div className="airmail h-1.5" aria-hidden="true" />
         <SiteHeader />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-8 pb-20 sm:px-6 sm:pt-12">{children}</main>
+        <MadeUp />
         <footer className="border-t">
           <div className="text-muted-foreground mx-auto flex max-w-5xl flex-wrap justify-between gap-x-6 gap-y-2 px-4 py-8 text-sm sm:px-6">
-            <p>Elsewhere is a demo job board: its companies and jobs are invented.</p>
+            <p>Elsewhere, a Nohead job board starter.</p>
             <a href="/feed.xml" className="hover:text-foreground inline-flex items-center gap-1.5">
               <Rss aria-hidden="true" className="size-4 shrink-0" />
               RSS feed
