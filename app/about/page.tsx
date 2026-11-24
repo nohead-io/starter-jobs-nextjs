@@ -4,11 +4,8 @@ import Link from "next/link"
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Elsewhere is a demo job board, built with Next.js on Nohead to show a real site's content kept in a CMS.",
+    "How Elsewhere, a demo job board, is made: Next.js, with its content, search, images and forms on Nohead.",
 }
-
-/** The address of this site's code, for the links below. */
-const repository = "https://github.com/nohead-io/starter-jobs-nextjs"
 
 /**
  * What the board is, who it's for and how it's made. The page is written in
@@ -19,39 +16,37 @@ export default function AboutPage() {
     <article className="max-w-2xl">
       <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">About Elsewhere</h1>
       <p className="text-muted-foreground mt-4 text-lg text-pretty">
-        Elsewhere is a job board for remote and hybrid work at small software companies. It&apos;s also a
-        demo: its companies and jobs are invented, and it&apos;s here to show how a site like it is made.
+        Elsewhere is a made-up job board for remote jobs at small software companies. The software behind it
+        is open source and built on{" "}
+        <a href="https://nohead.io" className="text-primary underline underline-offset-4">
+          Nohead
+        </a>
+        , and you can deploy it yourself and make it your own. Nothing you post goes live.
       </p>
 
       <div className="prose prose-neutral dark:prose-invert prose-headings:tracking-tight prose-h2:text-xl prose-a:text-primary prose-a:underline-offset-4 mt-10 max-w-none">
-        <h2>A board that isn&apos;t real</h2>
+        <h2>What is Nohead?</h2>
         <p>
-          Every company on Elsewhere, its logo and its jobs were written for this demo. None of them is
-          hiring. Everything works as it would on a real board, though: you can search and filter the jobs,
-          follow new jobs by <a href="/feed.xml">RSS</a>, apply to a job and{" "}
-          <Link href="/post">post one</Link>. What you send is kept as it would be, unpublished, and deleted
-          regularly; nobody reads it, and nothing you post goes live.
+          Nohead stores structured content for sites and apps. You describe your content as collections of
+          typed fields, your team writes and publishes it in a shared editor, and your code reads and writes
+          it through an API, with SDKs for TypeScript, Python and Ruby. Every change to a record is kept in
+          its history and can be undone. Search, resized images and webhooks come with it, so a site like this
+          one needs no database, search engine or image service of its own. The{" "}
+          <a href="https://docs.nohead.io/quickstart">quickstart</a> takes a few minutes.
         </p>
 
-        <h2>Why it&apos;s here</h2>
-        <p>
-          Elsewhere is a starter for <a href="https://nohead.io">Nohead</a>, an API-first headless CMS: its
-          content is modelled once, edited in Nohead&apos;s editor and served through an API. It shows what a
-          site built on Nohead looks like when it has to do more than show pages: content edited in Nohead and
-          read by the site, search, images, forms that write back, and a site that refreshes when something is
-          published.
-        </p>
-
-        <h2>How it&apos;s made</h2>
+        <h2>How it works</h2>
+        <p>Nohead holds all the content behind the job board and handles user submissions.</p>
         <ul>
           <li>
-            <strong>Content</strong> lives in a Nohead project: jobs, the companies hiring and the categories
-            they&apos;re in, defined as code in the repository and{" "}
+            <strong>The jobs, companies and categories</strong> live in a Nohead project, modelled as code in
+            the repository and{" "}
             <a href="https://docs.nohead.io/guides/reading-content">read with the Nohead SDK</a>.
           </li>
           <li>
-            <strong>Search and filters</strong> run in the browser, against Nohead&apos;s{" "}
-            <a href="https://docs.nohead.io/guides/public-search">public search</a>.
+            <strong>Search and filters</strong> run in the browser, on Nohead&apos;s{" "}
+            <a href="https://docs.nohead.io/guides/public-search">public search</a>, with a token that finds
+            only published jobs.
           </li>
           <li>
             <strong>Logos</strong> are resized and converted by Nohead&apos;s{" "}
@@ -60,11 +55,12 @@ export default function AboutPage() {
           <li>
             <strong>Applications and posted jobs</strong> are{" "}
             <a href="https://docs.nohead.io/guides/writing-content">written to Nohead</a> by the site&apos;s
-            server, unpublished, for someone to review.
+            server, unpublished, for someone to review. On this demo, nobody publishes them, and they&apos;re
+            deleted regularly.
           </li>
           <li>
-            <strong>Pages</strong> are built ahead of time and{" "}
-            <a href="https://docs.nohead.io/guides/webhooks">refreshed by a webhook</a> when content is
+            <strong>Pages</strong> are built ahead of time, and a{" "}
+            <a href="https://docs.nohead.io/guides/webhooks">webhook</a> refreshes them when content is
             published.
           </li>
           <li>
@@ -74,12 +70,6 @@ export default function AboutPage() {
             <a href="https://fonts.google.com/specimen/Schibsted+Grotesk">Schibsted Grotesk</a> for its type.
           </li>
         </ul>
-
-        <h2>Make one of your own</h2>
-        <p>
-          The code is <a href={repository}>on GitHub</a>, under the MIT licence. Its README says how to
-          connect a copy to your own Nohead project, fill it with your own jobs and deploy it.
-        </p>
       </div>
     </article>
   )

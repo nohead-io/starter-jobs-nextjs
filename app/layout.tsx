@@ -29,9 +29,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-8 pb-20 sm:px-6 sm:pt-12">{children}</main>
         <MadeUp />
-        <footer className="border-t">
+        <footer>
           <div className="text-muted-foreground mx-auto flex max-w-5xl flex-wrap justify-between gap-x-6 gap-y-2 px-4 py-8 text-sm sm:px-6">
-            <p>Elsewhere, a Nohead job board starter.</p>
+            <p>
+              <strong className="text-foreground font-semibold">Elsewhere</strong> – a{" "}
+              <a href="https://nohead.io" className="hover:text-foreground">
+                Nohead
+              </a>{" "}
+              job board starter.
+            </p>
             <a href="/feed.xml" className="hover:text-foreground inline-flex items-center gap-1.5">
               <Rss aria-hidden="true" className="size-4 shrink-0" />
               RSS feed

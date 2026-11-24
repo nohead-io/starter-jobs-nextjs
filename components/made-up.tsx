@@ -10,10 +10,10 @@ const repository = "https://github.com/nohead-io/starter-jobs-nextjs"
  */
 export function MadeUp() {
   return (
-    <section aria-labelledby="made-up" className="bg-muted/60 border-t">
+    <section aria-labelledby="made-up" className="bg-muted/60">
       <div className="mx-auto grid max-w-5xl gap-x-10 gap-y-10 px-4 py-14 sm:px-6 md:grid-cols-[3fr_2fr_2fr] md:py-16">
         <div>
-          <h2 id="made-up" className="text-3xl font-bold tracking-tight text-balance">
+          <h2 id="made-up" className="text-2xl font-bold tracking-tight text-balance">
             Elsewhere is made up.
           </h2>
           <p className="text-muted-foreground mt-3 max-w-md text-pretty">
