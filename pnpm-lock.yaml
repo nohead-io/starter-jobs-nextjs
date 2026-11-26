@@ -173,8 +173,8 @@ importers:
         specifier: ^0.31.5
         version: 0.31.5(meilisearch@0.57.0)
       '@nohead/sdk':
-        specifier: 0.25.0
-        version: 0.25.0
+        specifier: 0.26.0
+        version: 0.26.0
       '@sindresorhus/slugify':
         specifier: ^4.0.1
         version: 4.0.1
@@ -840,6 +840,10 @@ packages:
 
   '@nohead/sdk@0.25.0':
     resolution: {integrity: sha512-tbKyXaOrbX0fVWKbxChFYjs3a1fFCMC9kQ7VbWCjJZhKFCNUO0zeS3gNyTJiPMZRUBmqm1SmMdmUAJPG3JngLQ==}
+    engines: {node: '>=22'}
+
+  '@nohead/sdk@0.26.0':
+    resolution: {integrity: sha512-y3vnR7pwIj5Lpo0+DJrYLtHH6e8j7e1tJ2EikAnPPNX0uMAPxayrscn0RyVVWSaMgvj+YCq+VQImiHrvoT/MOA==}
     engines: {node: '>=22'}
 
   '@nolyfill/is-core-module@1.0.39':
@@ -3759,6 +3763,8 @@ snapshots:
       yaml: 2.9.1
 
   '@nohead/sdk@0.25.0': {}
+
+  '@nohead/sdk@0.26.0': {}
 
   '@nolyfill/is-core-module@1.0.39': {}
 

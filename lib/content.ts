@@ -10,7 +10,7 @@
 // Server-side only: importing it from a client component fails the build, so
 // the site's key never reaches the browser.
 import "server-only"
-import { Nohead } from "@nohead/sdk"
+import { Nohead, type Asset } from "@nohead/sdk"
 import { cacheLife, cacheTag } from "next/cache"
 import { newestFirst } from "./format"
 
@@ -116,14 +116,22 @@ export async function getCompanies(): Promise<Company[]> {
   "use cache"
   cacheAsContent()
   const records = await Array.fromAsync(
-    nohead.records.list<Omit<Company, "id" | "logo">>("companies", { limit: 100, expand: ["logo"] })
+    // The second type is what expand embeds: a deleted asset expands to null,
+    // while the company still names it.
+    nohead.records.list<Omit<Company, "id" | "logo">, { logo: Asset | null }>("companies", {
+      limit: 100,
+      expand: ["logo"],
+    })
   )
   return records
-    .map(({ id, data: { slug, name, website, about }, expanded }) => {
-      // A deleted asset expands to null, while the company still names it.
-      const logo = expanded?.logo as { image_url: string } | null | undefined
-      return { id, slug, name, logo: logo?.image_url ?? null, website, about }
-    })
+    .map(({ id, data: { slug, name, website, about }, expanded }) => ({
+      id,
+      slug,
+      name,
+      logo: expanded.logo?.image_url ?? null,
+      website,
+      about,
+    }))
     .sort((a, b) => a.name.localeCompare(b.name))
 }
 
