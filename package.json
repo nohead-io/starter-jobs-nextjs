@@ -10,7 +10,8 @@
     "check": "next typegen && tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "seed": "node scripts/seed.ts"
+    "seed": "node scripts/seed.ts",
+    "seed:dates": "node scripts/seed-dates.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

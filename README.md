@@ -43,6 +43,8 @@ NOHEAD_API_KEY=... pnpm seed
 
 It creates what's missing and leaves what's already there alone, matched by slug, so running it again is safe. The jobs' dates move forward together, so the newest was posted the day you seed.
 
+To keep the demo jobs open later on, `pnpm seed:dates` moves the published jobs' dates forward the same way, with a key that has the `records:read` and `records:write` scopes. Each job it moves is a published edit, so the webhook refreshes the site.
+
 ## Keys
 
 The site needs these from your Nohead project, set in `.env.local` (copy [`.env.example`](.env.example)):
